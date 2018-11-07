@@ -181,6 +181,13 @@ class TESS_API TessBaseAPI {
   void PrintVariables(FILE *fp) const;
 
   /**
+   * Print Tesseract parameters to stdout
+   */
+  void PrintVariables() {
+    PrintVariables(stdout);
+  }
+
+  /**
    * Get value of named variable as a string, if it exists.
    */
   bool GetVariableAsString(const char *name, STRING *val);
