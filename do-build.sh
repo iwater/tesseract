@@ -1,14 +1,20 @@
 #!/bin/bash
-#
-#
-#
 
-# Build Leptonica
-emmake cmake -Hleptonica -Bleptonica/build -DCMAKE_INSTALL_PREFIX=leptonica/usr
-emmake make -C leptonica/build install
+build_leptonica() {
+  emmake cmake -Hleptonica -Bleptonica/build -DCMAKE_INSTALL_PREFIX=leptonica/usr
+  emmake make -C leptonica/build install
+}
 
-# Build Tesseract
-mkdir build
-cd build
-emmake cmake .. -DLeptonica_DIR=leptonica/build
-emmake make
+build_tesseract() {
+  mkdir build
+  cd build
+  emmake cmake .. -DLeptonica_DIR=leptonica/build
+  emmake make
+}
+
+main() {
+  build_leptonica
+  build_tesseract
+}
+
+main "$@"
