@@ -17,19 +17,10 @@ gen_glue() {
     sh -c 'python /emsdk_portable/sdk/tools/webidl_binder.py tesseract.idl glue'
 }
 
-remove_unused() {
-  rm -rf parser.out WebIDLGrammar.pkl
-}
-
-move_to_src() {
-  mv glue.cpp glue.js ../src
-}
-
 main() {
   check_command docker
   gen_glue
-  remove_unused
-  move_to_src
+  rm -rf parser.out WebIDLGrammar.pkl
 }
 
 main "$@"
