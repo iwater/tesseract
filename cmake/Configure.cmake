@@ -125,7 +125,7 @@ file(APPEND ${AUTOCONFIG_SRC} "
 #cmakedefine PACKAGE_VERSION \"${VERSION_PLAIN}\"
 ")
 
-test_big_endian(WORDS_BIGENDIAN)
+#test_big_endian(WORDS_BIGENDIAN)
 
 file(APPEND ${AUTOCONFIG_SRC} "
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
