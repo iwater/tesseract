@@ -259,143 +259,181 @@ else()
             PROPERTIES COMPILE_FLAGS "-mavx2")
 endif()
 
-add_library                     (libtesseract ${LIBRARY_TYPE} ${tesseract_src} ${tesseract_hdr}
-    ${tesseract_rsc}
-    )
-if (NOT STATIC)
-target_compile_definitions      (libtesseract
-    PRIVATE -DTESS_EXPORTS
-    INTERFACE -DTESS_IMPORTS
-)
-set_target_properties           (libtesseract PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS True)
-endif()
-target_link_libraries           (libtesseract ${LIB_Ws2_32} ${LIB_pthread})
-set_target_properties           (libtesseract PROPERTIES VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-set_target_properties           (libtesseract PROPERTIES SOVERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-if (WIN32)
-set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR})
-set_target_properties           (libtesseract PROPERTIES DEBUG_OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR}d)
-else()
-set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract)
-endif()
-
-if (NOT CPPAN_BUILD)
-    target_link_libraries       (libtesseract ${Leptonica_LIBRARIES})
-    export(TARGETS libtesseract FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
-else()
-    target_link_libraries       (libtesseract pvt.cppan.demo.danbloomberg.leptonica)
-    file(WRITE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake "include(${CMAKE_BINARY_DIR}/cppan.cmake)\n")
-    export(TARGETS libtesseract APPEND FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
-endif()
+#add_library                     (libtesseract ${LIBRARY_TYPE} ${tesseract_src} ${tesseract_hdr}
+#    ${tesseract_rsc}
+#    )
+#if (NOT STATIC)
+#target_compile_definitions      (libtesseract
+#    PRIVATE -DTESS_EXPORTS
+#    INTERFACE -DTESS_IMPORTS
+#)
+#set_target_properties           (libtesseract PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS True)
+#endif()
+#target_link_libraries           (libtesseract ${LIB_Ws2_32} ${LIB_pthread})
+#set_target_properties           (libtesseract PROPERTIES VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+#set_target_properties           (libtesseract PROPERTIES SOVERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+#if (WIN32)
+#set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR})
+#set_target_properties           (libtesseract PROPERTIES DEBUG_OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR}d)
+#else()
+#set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract)
+#endif()
+#
+#if (NOT CPPAN_BUILD)
+#    target_link_libraries       (libtesseract ${Leptonica_LIBRARIES})
+#    export(TARGETS libtesseract FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
+#else()
+#    target_link_libraries       (libtesseract pvt.cppan.demo.danbloomberg.leptonica)
+#    file(WRITE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake "include(${CMAKE_BINARY_DIR}/cppan.cmake)\n")
+#    export(TARGETS libtesseract APPEND FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
+#endif()
 
 ########################################
 # EXECUTABLE tesseractmain
 ########################################
 
-set(tesseractmain_src src/api/tesseractmain.cpp)
-if (MSVC)
-    set(tesseractmain_rsc ${CMAKE_BINARY_DIR}/vs2010/tesseract/tesseract.rc)
-endif()
+#set(tesseractmain_src src/api/tesseractmain.cpp)
+#if (MSVC)
+#    set(tesseractmain_rsc ${CMAKE_BINARY_DIR}/vs2010/tesseract/tesseract.rc)
+#endif()
 
-add_executable                  (tesseract ${tesseractmain_src} ${tesseractmain_rsc})
-target_link_libraries           (tesseract libtesseract)
+#add_executable                  (tesseract ${tesseractmain_src} ${tesseractmain_rsc})
+#target_link_libraries           (tesseract libtesseract)
+
+########################################
+# Build tesseract.js
+########################################
+
+set(tesseract_js_wrapper javascript/src/wrapper.cpp)
+#set_target_properties(tesseract.js PROPERTIES COMPILE_FLAGS TESSERACT_JS_FLAGS)
+
+add_executable                  (tesseract.js ${tesseract_src} ${tesseract_hdr} ${tesseract_js_wrapper})
+target_compile_options(tesseract.js PRIVATE
+  #
+  # Check link below for detail explanation
+  # https://kripken.github.io/emscripten-site/docs/tools_reference/emcc.html
+  # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
+  #
+  # Optimize code for size reduction
+  -Oz
+  # Run closure compiler, reduce code size
+  --closure 1
+  # Do not emit a separate memory initialization file
+  --memory-init-file 0
+  # Use double amount of memory comparing to default
+  #-s TOTAL_MEMORY=268435456
+  # Replace default name 'Module' with 'TesseractCore'
+  -s EXPORT_NAME='TesseractCore'
+  # Enable for closure option
+  #-s MODULARIZE=1
+  #-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy"]'
+  #-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS", "setValue", "getValue"]'
+  # Do not run main function
+  #-s INVOKE_RUN=0
+  # Remove unneeded variables
+  #-s AGGRESSIVE_VARIABLE_ELIMINATION=1
+  #-s DEMANGLE_SUPPORT=1
+  --post-js /src/javascript/glue.js
+  #--post-js javascript/anterior.js
+  )
+#target_link_libraries           (tesseract.js libtesseract)
 
 ########################################
 
-if (BUILD_TESTS AND EXISTS ${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt)
-    add_subdirectory(googletest)
-    add_executable(tesseract_tests tests/tesseracttests.cpp)
-    target_link_libraries(tesseract_tests gtest_main)
-endif()
-
-if (BUILD_TRAINING_TOOLS)
-add_subdirectory(src/training)
-endif()
-
-get_target_property(tesseract_NAME libtesseract NAME)
-get_target_property(tesseract_VERSION libtesseract VERSION)
-get_target_property(tesseract_OUTPUT_NAME libtesseract OUTPUT_NAME)
-configure_file(tesseract.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc @ONLY)
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc DESTINATION lib/pkgconfig)
-install(TARGETS tesseract RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-install(TARGETS libtesseract EXPORT TesseractTargets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-install(EXPORT TesseractTargets DESTINATION cmake)
-install(FILES
-    ${CMAKE_BINARY_DIR}/TesseractConfig.cmake
-    ${CMAKE_BINARY_DIR}/TesseractConfig-version.cmake
-    DESTINATION cmake)
-
-install(FILES
-    # from api/makefile.am
-    src/api/apitypes.h
-    src/api/baseapi.h
-    src/api/capi.h
-    src/api/renderer.h
-    ${CMAKE_CURRENT_BINARY_DIR}/api/tess_version.h
-
-    #from arch/makefile.am
-    src/arch/dotproductavx.h
-    src/arch/dotproductsse.h
-    src/arch/intsimdmatrix.h
-    src/arch/intsimdmatrixavx2.h
-    src/arch/intsimdmatrixsse.h
-    src/arch/simddetect.h
-
-    #from ccmain/makefile.am
-    src/ccmain/thresholder.h
-    src/ccmain/ltrresultiterator.h
-    src/ccmain/pageiterator.h
-    src/ccmain/resultiterator.h
-    src/ccmain/osdetect.h
-
-    #from ccstruct/makefile.am
-    src/ccstruct/publictypes.h
-
-    #from ccutil/makefile.am
-    src/ccutil/basedir.h
-    src/ccutil/errcode.h
-    src/ccutil/fileerr.h
-    src/ccutil/genericvector.h
-    src/ccutil/helpers.h
-    src/ccutil/host.h
-    src/ccutil/params.h
-    src/ccutil/ocrclass.h
-    src/ccutil/platform.h
-    src/ccutil/serialis.h
-    src/ccutil/strngs.h
-    src/ccutil/tesscallback.h
-    src/ccutil/unichar.h
-    src/ccutil/unicharcompress.h
-    src/ccutil/unicharmap.h
-    src/ccutil/unicharset.h
-
-    #from lstm/makefile.am
-    src/lstm/convolve.h
-    src/lstm/ctc.h
-    src/lstm/fullyconnected.h
-    src/lstm/functions.h
-    src/lstm/input.h
-    src/lstm/lstm.h
-    src/lstm/lstmrecognizer.h
-    src/lstm/lstmtrainer.h
-    src/lstm/maxpool.h
-    src/lstm/networkbuilder.h
-    src/lstm/network.h
-    src/lstm/networkio.h
-    src/lstm/networkscratch.h
-    src/lstm/parallel.h
-    src/lstm/plumbing.h
-    src/lstm/recodebeam.h
-    src/lstm/reconfig.h
-    src/lstm/reversed.h
-    src/lstm/series.h
-    src/lstm/static_shape.h
-    src/lstm/stridemap.h
-    src/lstm/tfnetwork.h
-    src/lstm/weightmatrix.h
-
-    #${CMAKE_BINARY_DIR}/src/endianness.h
-    DESTINATION include/tesseract)
+#if (BUILD_TESTS AND EXISTS ${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt)
+#    add_subdirectory(googletest)
+#    add_executable(tesseract_tests tests/tesseracttests.cpp)
+#    target_link_libraries(tesseract_tests gtest_main)
+#endif()
+#
+#if (BUILD_TRAINING_TOOLS)
+#add_subdirectory(src/training)
+#endif()
+#
+#get_target_property(tesseract_NAME libtesseract NAME)
+#get_target_property(tesseract_VERSION libtesseract VERSION)
+#get_target_property(tesseract_OUTPUT_NAME libtesseract OUTPUT_NAME)
+#configure_file(tesseract.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc @ONLY)
+#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc DESTINATION lib/pkgconfig)
+#install(TARGETS tesseract.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+#install(TARGETS libtesseract EXPORT TesseractTargets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+#install(EXPORT TesseractTargets DESTINATION cmake)
+#install(FILES
+#    ${CMAKE_BINARY_DIR}/TesseractConfig.cmake
+#    ${CMAKE_BINARY_DIR}/TesseractConfig-version.cmake
+#    DESTINATION cmake)
+#
+#install(FILES
+#    # from api/makefile.am
+#    src/api/apitypes.h
+#    src/api/baseapi.h
+#    src/api/capi.h
+#    src/api/renderer.h
+#    ${CMAKE_CURRENT_BINARY_DIR}/api/tess_version.h
+#
+#    #from arch/makefile.am
+#    src/arch/dotproductavx.h
+#    src/arch/dotproductsse.h
+#    src/arch/intsimdmatrix.h
+#    src/arch/intsimdmatrixavx2.h
+#    src/arch/intsimdmatrixsse.h
+#    src/arch/simddetect.h
+#
+#    #from ccmain/makefile.am
+#    src/ccmain/thresholder.h
+#    src/ccmain/ltrresultiterator.h
+#    src/ccmain/pageiterator.h
+#    src/ccmain/resultiterator.h
+#    src/ccmain/osdetect.h
+#
+#    #from ccstruct/makefile.am
+#    src/ccstruct/publictypes.h
+#
+#    #from ccutil/makefile.am
+#    src/ccutil/basedir.h
+#    src/ccutil/errcode.h
+#    src/ccutil/fileerr.h
+#    src/ccutil/genericvector.h
+#    src/ccutil/helpers.h
+#    src/ccutil/host.h
+#    src/ccutil/params.h
+#    src/ccutil/ocrclass.h
+#    src/ccutil/platform.h
+#    src/ccutil/serialis.h
+#    src/ccutil/strngs.h
+#    src/ccutil/tesscallback.h
+#    src/ccutil/unichar.h
+#    src/ccutil/unicharcompress.h
+#    src/ccutil/unicharmap.h
+#    src/ccutil/unicharset.h
+#
+#    #from lstm/makefile.am
+#    src/lstm/convolve.h
+#    src/lstm/ctc.h
+#    src/lstm/fullyconnected.h
+#    src/lstm/functions.h
+#    src/lstm/input.h
+#    src/lstm/lstm.h
+#    src/lstm/lstmrecognizer.h
+#    src/lstm/lstmtrainer.h
+#    src/lstm/maxpool.h
+#    src/lstm/networkbuilder.h
+#    src/lstm/network.h
+#    src/lstm/networkio.h
+#    src/lstm/networkscratch.h
+#    src/lstm/parallel.h
+#    src/lstm/plumbing.h
+#    src/lstm/recodebeam.h
+#    src/lstm/reconfig.h
+#    src/lstm/reversed.h
+#    src/lstm/series.h
+#    src/lstm/static_shape.h
+#    src/lstm/stridemap.h
+#    src/lstm/tfnetwork.h
+#    src/lstm/weightmatrix.h
+#
+#    #${CMAKE_BINARY_DIR}/src/endianness.h
+#    DESTINATION include/tesseract)
 
 
 ###############################################################################
