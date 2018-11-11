@@ -8,8 +8,9 @@ build_leptonica() {
 build_tesseract() {
   mkdir -p build
   cd build
-  emmake cmake .. -DLeptonica_DIR=leptonica/build -DCMAKE_INSTALL_PREFIX=../usr
-  emmake make install
+  emmake cmake .. -DLeptonica_DIR=leptonica/build
+  emmake make
+  cd ..
 }
 
 main() {
