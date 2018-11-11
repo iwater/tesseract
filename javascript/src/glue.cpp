@@ -762,10 +762,6 @@ int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetThresholdedImageScaleFac
   return self->GetThresholdedImageScaleFactor();
 }
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_DumpPGM_1(TessBaseAPI* self, const char* arg0) {
-  self->DumpPGM(arg0);
-}
-
 PageIterator* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_AnalyseLayout_0(TessBaseAPI* self) {
   return self->AnalyseLayout();
 }

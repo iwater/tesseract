@@ -1,7 +1,18 @@
-Tesseract.js
-============
+Tesseract - Javascript version
+==============================
 
 This folder contains files for tesseract.js.
+
+```
+.
+|-- anterior.js         # ...
+|-- gen-glue.sh         # generate glue code: glue.cpp & glue.js
+|-- glue.js             # generated from gen-glue.sh
+|-- src
+|   |-- glue.cpp        # generated from gen-glue.sh
+|   |-- wrapper.cpp     # wrapper for glue.cpp, use for including headers and declare interface
+|-- tesseract.idl       # WebIDL file, check below for details
+```
 
 ### tesseract.idl
 
@@ -32,11 +43,3 @@ Basic guidance for converting C/C++ types to WebIDL types:
 | bool\* | BoolPtr |
 
 > IDL = Interface Description Language, describing APIs implemented in web.
-
-### glue.cpp & glue.js
-
-File generated from tesseract.idl, you can execute following command to generate:
-
-```sh
-$ sh gen-glue-code.sh
-```

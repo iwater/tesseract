@@ -20,6 +20,7 @@ gen_glue() {
 main() {
   check_command docker
   gen_glue
+  mv glue.cpp ./src
   rm -rf parser.out WebIDLGrammar.pkl
 }
 

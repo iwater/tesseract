@@ -2,6 +2,9 @@
 #include "resultiterator.h"
 #include "allheaders.h"
 #include "osdetect.h"
+#include "ocrclass.h"
+#include "dawg.h"
+#include "unicharset.h"
 
 namespace tesseract {
 	typedef unsigned char* Uint8Array;

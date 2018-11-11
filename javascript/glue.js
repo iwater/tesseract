@@ -1390,14 +1390,6 @@ TessBaseAPI.prototype['GetThresholdedImageScaleFactor'] = TessBaseAPI.prototype.
   return _emscripten_bind_TessBaseAPI_GetThresholdedImageScaleFactor_0(self);
 };;
 
-TessBaseAPI.prototype['DumpPGM'] = TessBaseAPI.prototype.DumpPGM = /** @suppress {undefinedVars, duplicate} */function(arg0) {
-  var self = this.ptr;
-  ensureCache.prepare();
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  else arg0 = ensureString(arg0);
-  _emscripten_bind_TessBaseAPI_DumpPGM_1(self, arg0);
-};;
-
 TessBaseAPI.prototype['AnalyseLayout'] = TessBaseAPI.prototype.AnalyseLayout = /** @suppress {undefinedVars, duplicate} */function(arg0) {
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
