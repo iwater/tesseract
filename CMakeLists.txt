@@ -312,14 +312,14 @@ set(tesseract_js_wrapper javascript/src/wrapper.cpp)
 #set_target_properties(tesseract.js PROPERTIES COMPILE_FLAGS TESSERACT_JS_FLAGS)
 
 add_executable                  (tesseract.js ${tesseract_js_wrapper})
-set_target_properties(tesseract.js PROPERTIES LINK_FLAGS
+#set_target_properties(tesseract.js PROPERTIES LINK_FLAGS
   #
   # Check link below for detail explanation
   # https://kripken.github.io/emscripten-site/docs/tools_reference/emcc.html
   # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
   #
   # Optimize code for size reduction
-  "-Oz -s SIMD=0"
+  #"-Oz"
   # Run closure compiler, reduce code size
   #--closure 1
   # Do not emit a separate memory initialization file
@@ -340,7 +340,7 @@ set_target_properties(tesseract.js PROPERTIES LINK_FLAGS
   #-s DEMANGLE_SUPPORT=1
   #"SHELL:--post-js /src/javascript/glue.js"
   #"SHELL:--post-js /src/javascript/anterior.js"
-)
+  #)
 target_link_libraries           (tesseract.js libtesseract)
 
 ########################################
