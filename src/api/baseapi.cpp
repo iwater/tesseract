@@ -204,6 +204,9 @@ TessBaseAPI::TessBaseAPI()
       rect_height_(0),
       image_width_(0),
       image_height_(0) {
+  /*
+   * Remove locale setting as emscripten doesn't care.
+   *
   const char *locale;
   locale = std::setlocale(LC_ALL, nullptr);
   ASSERT_HOST(!strcmp(locale, "C"));
@@ -211,6 +214,7 @@ TessBaseAPI::TessBaseAPI()
   ASSERT_HOST(!strcmp(locale, "C"));
   locale = std::setlocale(LC_NUMERIC, nullptr);
   ASSERT_HOST(!strcmp(locale, "C"));
+  */
 }
 
 TessBaseAPI::~TessBaseAPI() {
