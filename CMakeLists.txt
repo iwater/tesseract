@@ -23,10 +23,12 @@ if (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
     )
 endif()
 
-set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake")
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake;/emsdk_portable/sdk/cmake/Modules")
 
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EXECUTABLE_OUTPUT_PATH}")
+set(CMAKE_VERBOSE_MAKEFILE ON)
+#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-export-dynamic")
 
 # Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -81,8 +83,12 @@ endif()
 
 if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Oz")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --memory-init-file 0")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --llvm-lto 1")
 
-    set(LIB_pthread pthread)
+    #set(LIB_pthread pthread)
 endif()
 
 ###############################################################################
@@ -155,7 +161,7 @@ include(SourceGroups)
 
 add_definitions(-DHAVE_CONFIG_H)
 add_definitions(-D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS=1)
-add_definitions(-DWINDLLNAME="libtesseract${VERSION_MAJOR}${VERSION_MINOR}.dll")
+#add_definitions(-DWINDLLNAME="libtesseract${VERSION_MAJOR}${VERSION_MINOR}.dll")
 
 include_directories(${Leptonica_INCLUDE_DIRS})
 
@@ -259,34 +265,32 @@ else()
             PROPERTIES COMPILE_FLAGS "-mavx2")
 endif()
 
-#add_library                     (libtesseract ${LIBRARY_TYPE} ${tesseract_src} ${tesseract_hdr}
-#    ${tesseract_rsc}
-#    )
-#if (NOT STATIC)
-#target_compile_definitions      (libtesseract
-#    PRIVATE -DTESS_EXPORTS
-#    INTERFACE -DTESS_IMPORTS
-#)
-#set_target_properties           (libtesseract PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS True)
-#endif()
-#target_link_libraries           (libtesseract ${LIB_Ws2_32} ${LIB_pthread})
-#set_target_properties           (libtesseract PROPERTIES VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-#set_target_properties           (libtesseract PROPERTIES SOVERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
-#if (WIN32)
-#set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR})
-#set_target_properties           (libtesseract PROPERTIES DEBUG_OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR}d)
-#else()
-#set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract)
-#endif()
-#
-#if (NOT CPPAN_BUILD)
-#    target_link_libraries       (libtesseract ${Leptonica_LIBRARIES})
-#    export(TARGETS libtesseract FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
-#else()
-#    target_link_libraries       (libtesseract pvt.cppan.demo.danbloomberg.leptonica)
-#    file(WRITE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake "include(${CMAKE_BINARY_DIR}/cppan.cmake)\n")
-#    export(TARGETS libtesseract APPEND FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
-#endif()
+add_library                     (libtesseract ${LIBRARY_TYPE} ${tesseract_src} ${tesseract_hdr} ${tesseract_rsc})
+if (NOT STATIC)
+    target_compile_definitions      (libtesseract
+      PRIVATE -DTESS_EXPORTS
+      INTERFACE -DTESS_IMPORTS
+      )
+    set_target_properties           (libtesseract PROPERTIES WINDOWS_EXPORT_ALL_SYMBOLS True)
+endif()
+    target_link_libraries           (libtesseract ${LIB_Ws2_32} ${LIB_pthread})
+    set_target_properties           (libtesseract PROPERTIES VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+    set_target_properties           (libtesseract PROPERTIES SOVERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
+if (WIN32)
+    set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR})
+    set_target_properties           (libtesseract PROPERTIES DEBUG_OUTPUT_NAME tesseract${VERSION_MAJOR}${VERSION_MINOR}d)
+else()
+    set_target_properties           (libtesseract PROPERTIES OUTPUT_NAME tesseract)
+endif()
+
+if (NOT CPPAN_BUILD)
+    target_link_libraries       (libtesseract ${Leptonica_LIBRARIES})
+    export(TARGETS libtesseract FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
+else()
+    target_link_libraries       (libtesseract pvt.cppan.demo.danbloomberg.leptonica)
+    file(WRITE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake "include(${CMAKE_BINARY_DIR}/cppan.cmake)\n")
+    export(TARGETS libtesseract APPEND FILE ${CMAKE_BINARY_DIR}/TesseractTargets.cmake)
+endif()
 
 ########################################
 # EXECUTABLE tesseractmain
@@ -307,36 +311,37 @@ endif()
 set(tesseract_js_wrapper javascript/src/wrapper.cpp)
 #set_target_properties(tesseract.js PROPERTIES COMPILE_FLAGS TESSERACT_JS_FLAGS)
 
-add_executable                  (tesseract.js ${tesseract_src} ${tesseract_hdr} ${tesseract_js_wrapper})
-target_compile_options(tesseract.js PRIVATE
+add_executable                  (tesseract.js ${tesseract_js_wrapper})
+set_target_properties(tesseract.js PROPERTIES LINK_FLAGS
   #
   # Check link below for detail explanation
   # https://kripken.github.io/emscripten-site/docs/tools_reference/emcc.html
   # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
   #
   # Optimize code for size reduction
-  -Oz
+  "-Oz -s SIMD=0"
   # Run closure compiler, reduce code size
-  --closure 1
+  #--closure 1
   # Do not emit a separate memory initialization file
-  --memory-init-file 0
+  #--memory-init-file 0
   # Use double amount of memory comparing to default
-  #-s TOTAL_MEMORY=268435456
+  #"SHELL:-s TOTAL_MEMORY=268435456"
   # Replace default name 'Module' with 'TesseractCore'
-  -s EXPORT_NAME='TesseractCore'
+  #"SHELL:-s EXPORT_NAME='TesseractCore'"
   # Enable for closure option
-  #-s MODULARIZE=1
+  #"SHELL:-s MODULARIZE=1"
   #-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy"]'
   #-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS", "setValue", "getValue"]'
   # Do not run main function
-  #-s INVOKE_RUN=0
+  #"SHELL:-s INVOKE_RUN=0"
   # Remove unneeded variables
-  #-s AGGRESSIVE_VARIABLE_ELIMINATION=1
+  #"SHELL:-s AGGRESSIVE_VARIABLE_ELIMINATION=1"
+  #"SHELL:-s WASM=0"
   #-s DEMANGLE_SUPPORT=1
-  --post-js /src/javascript/glue.js
-  #--post-js javascript/anterior.js
-  )
-#target_link_libraries           (tesseract.js libtesseract)
+  #"SHELL:--post-js /src/javascript/glue.js"
+  #"SHELL:--post-js /src/javascript/anterior.js"
+)
+target_link_libraries           (tesseract.js libtesseract)
 
 ########################################
 

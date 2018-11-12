@@ -125,12 +125,12 @@ file(APPEND ${AUTOCONFIG_SRC} "
 #cmakedefine PACKAGE_VERSION \"${VERSION_PLAIN}\"
 ")
 
-#test_big_endian(WORDS_BIGENDIAN)
+test_big_endian(WORDS_BIGENDIAN)
 
 file(APPEND ${AUTOCONFIG_SRC} "
 /* Define WORDS_BIGENDIAN to 1 if your processor stores words with the most
    significant byte first (like Motorola and SPARC, unlike Intel). */
-#cmakedefine WORDS_BIGENDIAN 0
+#cmakedefine WORDS_BIGENDIAN 1
 ")
 
 ########################################
