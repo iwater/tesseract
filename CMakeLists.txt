@@ -28,7 +28,6 @@ set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_SOURCE_DIR}/cmake;/emsdk_por
 set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${EXECUTABLE_OUTPUT_PATH}")
 set(CMAKE_VERBOSE_MAKEFILE ON)
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,--no-export-dynamic")
 
 # Use solution folders.
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -82,13 +81,23 @@ if (CYGWIN)
 endif()
 
 if (UNIX)
+    #
+    # Check link below for detail explanation:
+    # https://kripken.github.io/emscripten-site/docs/tools_reference/emcc.html
+    # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
+    #
+    # Use c++11 standard
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
+    # Optimize code for size reduction
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Oz")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
+    # Run closure compiler, reduce code size, enable closure will lead to variable undeclare issue
+    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
+    # Do not emit a separate memory initialization file
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --memory-init-file 0")
+    # LLVM link-time optimization, this flag solves the issue of [Invalid SIMD cast between items of different bit sizes]
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --llvm-lto 1")
 
-    #set(LIB_pthread pthread)
+    set(LIB_pthread pthread)
 endif()
 
 ###############################################################################
@@ -305,140 +314,143 @@ endif()
 #target_link_libraries           (tesseract libtesseract)
 
 ########################################
-# Build tesseract.js
+# Build tesseract.js (with WASM)
 ########################################
 
 set(tesseract_js_wrapper javascript/src/wrapper.cpp)
-#set_target_properties(tesseract.js PROPERTIES COMPILE_FLAGS TESSERACT_JS_FLAGS)
 
 add_executable                  (tesseract.js ${tesseract_js_wrapper})
-#set_target_properties(tesseract.js PROPERTIES LINK_FLAGS
-  #
-  # Check link below for detail explanation
-  # https://kripken.github.io/emscripten-site/docs/tools_reference/emcc.html
-  # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
-  #
-  # Optimize code for size reduction
-  #"-Oz"
-  # Run closure compiler, reduce code size
-  #--closure 1
-  # Do not emit a separate memory initialization file
-  #--memory-init-file 0
-  # Use double amount of memory comparing to default
-  #"SHELL:-s TOTAL_MEMORY=268435456"
-  # Replace default name 'Module' with 'TesseractCore'
-  #"SHELL:-s EXPORT_NAME='TesseractCore'"
-  # Enable for closure option
-  #"SHELL:-s MODULARIZE=1"
-  #-s EXPORTED_FUNCTIONS='["_pixDestroy","_boxaDestroy","_pixaDestroy","_ptaDestroy"]'
-  #-s EXTRA_EXPORTED_RUNTIME_METHODS='["FS", "setValue", "getValue"]'
-  # Do not run main function
-  #"SHELL:-s INVOKE_RUN=0"
-  # Remove unneeded variables
-  #"SHELL:-s AGGRESSIVE_VARIABLE_ELIMINATION=1"
-  #"SHELL:-s WASM=0"
-  #-s DEMANGLE_SUPPORT=1
-  #"SHELL:--post-js /src/javascript/glue.js"
-  #"SHELL:--post-js /src/javascript/anterior.js"
-  #)
+#
+# Check link below for detail explanation
+# https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
+#
+# Use double amount of memory comparing to default
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s TOTAL_MEMORY=268435456")
+# Replace default name 'Module' with 'TesseractCore'
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCore\"'")
+# Enable for closure option
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s MODULARIZE=1")
+# Do not run main function
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s INVOKE_RUN=0")
+# Remove unneeded variables
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s AGGRESSIVE_VARIABLE_ELIMINATION=1")
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s DEMANGLE_SUPPORT=1")
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORTED_FUNCTIONS='[\"_pixDestroy\",\"_boxaDestroy\",\"_pixaDestroy\",\"_ptaDestroy\"]'")
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"FS\", \"setValue\", \"getValue\"]'")
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/glue.js")
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/anterior.js")
+set_target_properties(tesseract.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
 target_link_libraries           (tesseract.js libtesseract)
 
 ########################################
+# Build tesseract.js (without WASM)
+########################################
 
-#if (BUILD_TESTS AND EXISTS ${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt)
-#    add_subdirectory(googletest)
-#    add_executable(tesseract_tests tests/tesseracttests.cpp)
-#    target_link_libraries(tesseract_tests gtest_main)
-#endif()
-#
-#if (BUILD_TRAINING_TOOLS)
-#add_subdirectory(src/training)
-#endif()
-#
-#get_target_property(tesseract_NAME libtesseract NAME)
-#get_target_property(tesseract_VERSION libtesseract VERSION)
-#get_target_property(tesseract_OUTPUT_NAME libtesseract OUTPUT_NAME)
-#configure_file(tesseract.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc @ONLY)
-#install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc DESTINATION lib/pkgconfig)
-#install(TARGETS tesseract.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-#install(TARGETS libtesseract EXPORT TesseractTargets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-#install(EXPORT TesseractTargets DESTINATION cmake)
-#install(FILES
-#    ${CMAKE_BINARY_DIR}/TesseractConfig.cmake
-#    ${CMAKE_BINARY_DIR}/TesseractConfig-version.cmake
-#    DESTINATION cmake)
-#
-#install(FILES
-#    # from api/makefile.am
-#    src/api/apitypes.h
-#    src/api/baseapi.h
-#    src/api/capi.h
-#    src/api/renderer.h
-#    ${CMAKE_CURRENT_BINARY_DIR}/api/tess_version.h
-#
-#    #from arch/makefile.am
-#    src/arch/dotproductavx.h
-#    src/arch/dotproductsse.h
-#    src/arch/intsimdmatrix.h
-#    src/arch/intsimdmatrixavx2.h
-#    src/arch/intsimdmatrixsse.h
-#    src/arch/simddetect.h
-#
-#    #from ccmain/makefile.am
-#    src/ccmain/thresholder.h
-#    src/ccmain/ltrresultiterator.h
-#    src/ccmain/pageiterator.h
-#    src/ccmain/resultiterator.h
-#    src/ccmain/osdetect.h
-#
-#    #from ccstruct/makefile.am
-#    src/ccstruct/publictypes.h
-#
-#    #from ccutil/makefile.am
-#    src/ccutil/basedir.h
-#    src/ccutil/errcode.h
-#    src/ccutil/fileerr.h
-#    src/ccutil/genericvector.h
-#    src/ccutil/helpers.h
-#    src/ccutil/host.h
-#    src/ccutil/params.h
-#    src/ccutil/ocrclass.h
-#    src/ccutil/platform.h
-#    src/ccutil/serialis.h
-#    src/ccutil/strngs.h
-#    src/ccutil/tesscallback.h
-#    src/ccutil/unichar.h
-#    src/ccutil/unicharcompress.h
-#    src/ccutil/unicharmap.h
-#    src/ccutil/unicharset.h
-#
-#    #from lstm/makefile.am
-#    src/lstm/convolve.h
-#    src/lstm/ctc.h
-#    src/lstm/fullyconnected.h
-#    src/lstm/functions.h
-#    src/lstm/input.h
-#    src/lstm/lstm.h
-#    src/lstm/lstmrecognizer.h
-#    src/lstm/lstmtrainer.h
-#    src/lstm/maxpool.h
-#    src/lstm/networkbuilder.h
-#    src/lstm/network.h
-#    src/lstm/networkio.h
-#    src/lstm/networkscratch.h
-#    src/lstm/parallel.h
-#    src/lstm/plumbing.h
-#    src/lstm/recodebeam.h
-#    src/lstm/reconfig.h
-#    src/lstm/reversed.h
-#    src/lstm/series.h
-#    src/lstm/static_shape.h
-#    src/lstm/stridemap.h
-#    src/lstm/tfnetwork.h
-#    src/lstm/weightmatrix.h
-#
-#    #${CMAKE_BINARY_DIR}/src/endianness.h
-#    DESTINATION include/tesseract)
+add_executable                  (tesseract-asm.js ${tesseract_js_wrapper})
+
+# Disable WASM
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s WASM=0")
+
+set_target_properties(tesseract-asm.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
+target_link_libraries           (tesseract-asm.js libtesseract)
+
+########################################
+
+if (BUILD_TESTS AND EXISTS ${PROJECT_SOURCE_DIR}/googletest/CMakeLists.txt)
+    add_subdirectory(googletest)
+    add_executable(tesseract_tests tests/tesseracttests.cpp)
+    target_link_libraries(tesseract_tests gtest_main)
+endif()
+
+if (BUILD_TRAINING_TOOLS)
+    add_subdirectory(src/training)
+endif()
+
+get_target_property(tesseract_NAME libtesseract NAME)
+get_target_property(tesseract_VERSION libtesseract VERSION)
+get_target_property(tesseract_OUTPUT_NAME libtesseract OUTPUT_NAME)
+configure_file(tesseract.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc @ONLY)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc DESTINATION lib/pkgconfig)
+install(TARGETS tesseract.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS tesseract-asm.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS libtesseract EXPORT TesseractTargets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(EXPORT TesseractTargets DESTINATION cmake)
+install(FILES
+    ${CMAKE_BINARY_DIR}/TesseractConfig.cmake
+    ${CMAKE_BINARY_DIR}/TesseractConfig-version.cmake
+    DESTINATION cmake)
+
+install(FILES
+    # from api/makefile.am
+    src/api/apitypes.h
+    src/api/baseapi.h
+    src/api/capi.h
+    src/api/renderer.h
+    ${CMAKE_CURRENT_BINARY_DIR}/api/tess_version.h
+
+    #from arch/makefile.am
+    src/arch/dotproductavx.h
+    src/arch/dotproductsse.h
+    src/arch/intsimdmatrix.h
+    src/arch/intsimdmatrixavx2.h
+    src/arch/intsimdmatrixsse.h
+    src/arch/simddetect.h
+
+    #from ccmain/makefile.am
+    src/ccmain/thresholder.h
+    src/ccmain/ltrresultiterator.h
+    src/ccmain/pageiterator.h
+    src/ccmain/resultiterator.h
+    src/ccmain/osdetect.h
+
+    #from ccstruct/makefile.am
+    src/ccstruct/publictypes.h
+
+    #from ccutil/makefile.am
+    src/ccutil/basedir.h
+    src/ccutil/errcode.h
+    src/ccutil/fileerr.h
+    src/ccutil/genericvector.h
+    src/ccutil/helpers.h
+    src/ccutil/host.h
+    src/ccutil/params.h
+    src/ccutil/ocrclass.h
+    src/ccutil/platform.h
+    src/ccutil/serialis.h
+    src/ccutil/strngs.h
+    src/ccutil/tesscallback.h
+    src/ccutil/unichar.h
+    src/ccutil/unicharcompress.h
+    src/ccutil/unicharmap.h
+    src/ccutil/unicharset.h
+
+    #from lstm/makefile.am
+    src/lstm/convolve.h
+    src/lstm/ctc.h
+    src/lstm/fullyconnected.h
+    src/lstm/functions.h
+    src/lstm/input.h
+    src/lstm/lstm.h
+    src/lstm/lstmrecognizer.h
+    src/lstm/lstmtrainer.h
+    src/lstm/maxpool.h
+    src/lstm/networkbuilder.h
+    src/lstm/network.h
+    src/lstm/networkio.h
+    src/lstm/networkscratch.h
+    src/lstm/parallel.h
+    src/lstm/plumbing.h
+    src/lstm/recodebeam.h
+    src/lstm/reconfig.h
+    src/lstm/reversed.h
+    src/lstm/series.h
+    src/lstm/static_shape.h
+    src/lstm/stridemap.h
+    src/lstm/tfnetwork.h
+    src/lstm/weightmatrix.h
+
+    #${CMAKE_BINARY_DIR}/src/endianness.h
+    DESTINATION include/tesseract)
 
 
 ###############################################################################

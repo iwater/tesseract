@@ -15,8 +15,8 @@ check_command() {
 build() {
   docker run -it \
     -v ${PWD}:/src \
-    emscripten-cmake3.12:latest \
-    sh do-build.sh
+    trzeci/emscripten:${EMSCRIPTEN_VERSION} \
+    sh build-js.sh
 }
 
 main() {
