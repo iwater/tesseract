@@ -90,6 +90,7 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --std=c++11")
     # Optimize code for size reduction
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Oz")
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g4")
     # Run closure compiler, reduce code size, enable closure will lead to variable undeclare issue
     #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
     # Do not emit a separate memory initialization file
@@ -335,6 +336,10 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s INVOKE_RUN=0")
 # Remove unneeded variables
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s AGGRESSIVE_VARIABLE_ELIMINATION=1")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s DEMANGLE_SUPPORT=1")
+#set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s FS_LOG=1")
+#set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s RUNTIME_LOGGING=1")
+#set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s LIBRARY_DEBUG=1")
+#set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s SYSCALL_DEBUG=1")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORTED_FUNCTIONS='[\"_pixDestroy\",\"_boxaDestroy\",\"_pixaDestroy\",\"_ptaDestroy\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"FS\", \"setValue\", \"getValue\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/glue.js")
