@@ -1,8 +1,9 @@
 #!/bin/bash
 
 build_leptonica() {
-  emmake cmake -Hleptonica -Bleptonica/build -DCMAKE_INSTALL_PREFIX=leptonica/usr
-  emmake make -C leptonica/build install -j4
+  cd leptonica
+  sh build-js.sh
+  cd ..
 }
 
 build_tesseract() {
