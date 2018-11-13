@@ -316,12 +316,12 @@ endif()
 #target_link_libraries           (tesseract libtesseract)
 
 ########################################
-# Build tesseract.js (with WASM)
+# Build tesseract-core.js (WASM version)
 ########################################
 
 set(tesseract_js_wrapper javascript/src/wrapper.cpp)
 
-add_executable                  (tesseract.js ${tesseract_js_wrapper})
+add_executable                  (tesseract-core.js ${tesseract_js_wrapper})
 #
 # Check link below for detail explanation
 # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
@@ -352,20 +352,20 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORTED_FUNCTIONS='[\"_pixDestroy\",
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"FS\", \"setValue\", \"getValue\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/glue.js")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/anterior.js")
-set_target_properties(tesseract.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
-target_link_libraries           (tesseract.js libtesseract)
+set_target_properties(tesseract-core.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
+target_link_libraries           (tesseract-core.js libtesseract)
 
 ########################################
-# Build tesseract.js (without WASM)
+# Build tesseract-core.asm.js (ASM version)
 ########################################
 
-add_executable                  (tesseract-asm.js ${tesseract_js_wrapper})
+add_executable                  (tesseract-core.asm.js ${tesseract_js_wrapper})
 
 # Disable WASM
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s WASM=0")
 
-set_target_properties(tesseract-asm.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
-target_link_libraries           (tesseract-asm.js libtesseract)
+set_target_properties(tesseract-core.asm.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
+target_link_libraries           (tesseract-core.asm.js libtesseract)
 
 ########################################
 
@@ -384,8 +384,8 @@ get_target_property(tesseract_VERSION libtesseract VERSION)
 get_target_property(tesseract_OUTPUT_NAME libtesseract OUTPUT_NAME)
 configure_file(tesseract.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc DESTINATION lib/pkgconfig)
-install(TARGETS tesseract.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
-install(TARGETS tesseract-asm.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS tesseract-core.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS tesseract-core.asm.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(TARGETS libtesseract EXPORT TesseractTargets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(EXPORT TesseractTargets DESTINATION cmake)
 install(FILES
