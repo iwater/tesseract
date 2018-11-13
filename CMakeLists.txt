@@ -321,7 +321,7 @@ endif()
 
 set(tesseract_js_wrapper javascript/src/wrapper.cpp)
 
-add_executable                  (tesseract-core.js ${tesseract_js_wrapper})
+add_executable                  (tesseract-core.wasm.js ${tesseract_js_wrapper})
 #
 # Check link below for detail explanation
 # https://github.com/kripken/emscripten/blob/1.38.16/src/settings.js
@@ -338,6 +338,8 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s INVOKE_RUN=0")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s AGGRESSIVE_VARIABLE_ELIMINATION=1")
 # Allow stackTrace() to emit fully proper demangled c++ names
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s DEMANGLE_SUPPORT=1")
+# Embeds all subresources in the emitted file as base64 string literals.
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s SINGLE_FILE=1")
 #
 # This flag fix the issue of [float unrepresentable in integer range]
 # Ref: http://kripken.github.io/emscripten-site/docs/compiling/WebAssembly.html#trap-mode
@@ -352,8 +354,8 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORTED_FUNCTIONS='[\"_pixDestroy\",
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"FS\", \"setValue\", \"getValue\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/glue.js")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/anterior.js")
-set_target_properties(tesseract-core.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
-target_link_libraries           (tesseract-core.js libtesseract)
+set_target_properties(tesseract-core.wasm.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
+target_link_libraries           (tesseract-core.wasm.js libtesseract)
 
 ########################################
 # Build tesseract-core.asm.js (ASM version)
@@ -384,7 +386,7 @@ get_target_property(tesseract_VERSION libtesseract VERSION)
 get_target_property(tesseract_OUTPUT_NAME libtesseract OUTPUT_NAME)
 configure_file(tesseract.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc @ONLY)
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/tesseract.pc DESTINATION lib/pkgconfig)
-install(TARGETS tesseract-core.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
+install(TARGETS tesseract-core.wasm.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(TARGETS tesseract-core.asm.js RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(TARGETS libtesseract EXPORT TesseractTargets RUNTIME DESTINATION bin LIBRARY DESTINATION lib ARCHIVE DESTINATION lib)
 install(EXPORT TesseractTargets DESTINATION cmake)
