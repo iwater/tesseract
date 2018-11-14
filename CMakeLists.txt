@@ -92,7 +92,7 @@ if (UNIX)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Oz")
     # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g4")
     # Run closure compiler, reduce code size, enable closure will lead to variable undeclare issue
-    #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --closure 1")
     # Do not emit a separate memory initialization file
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --memory-init-file 0")
     # LLVM link-time optimization, this flag solves the issue of [Invalid SIMD cast between items of different bit sizes]
@@ -170,6 +170,7 @@ include(BuildFunctions)
 include(SourceGroups)
 
 add_definitions(-DHAVE_CONFIG_H)
+add_definitions(-DGRAPHICS_DISABLED)
 add_definitions(-D_SILENCE_STDEXT_HASH_DEPRECATION_WARNINGS=1)
 #add_definitions(-DWINDLLNAME="libtesseract${VERSION_MAJOR}${VERSION_MINOR}.dll")
 
@@ -335,7 +336,14 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s MODULARIZE=1")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s INVOKE_RUN=0")
 # Remove unneeded variables
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s AGGRESSIVE_VARIABLE_ELIMINATION=1")
+# Allow stackTrace() to emit fully proper demangled c++ names
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s DEMANGLE_SUPPORT=1")
+#
+# This flag fix the issue of [float unrepresentable in integer range]
+# Ref: http://kripken.github.io/emscripten-site/docs/compiling/WebAssembly.html#trap-mode
+#
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s BINARYEN_TRAP_MODE='\"clamp\"'")
+#set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s ASSERTIONS=1")
 #set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s FS_LOG=1")
 #set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s RUNTIME_LOGGING=1")
 #set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s LIBRARY_DEBUG=1")
