@@ -329,7 +329,7 @@ add_executable                  (tesseract-core.js ${tesseract_js_wrapper})
 # Use double amount of memory comparing to default
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s TOTAL_MEMORY=268435456")
 # Replace default name 'Module' with 'TesseractCore'
-set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCore\"'")
+# set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCore\"'")
 # Enable for closure option
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s MODULARIZE=1")
 # Do not run main function
@@ -352,7 +352,7 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORTED_FUNCTIONS='[\"_pixDestroy\",
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"FS\", \"setValue\", \"getValue\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/glue.js")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/anterior.js")
-set_target_properties(tesseract-core.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
+set_target_properties(tesseract-core.js PROPERTIES LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCoreWASM\"'")
 target_link_libraries           (tesseract-core.js libtesseract)
 
 ########################################
@@ -364,7 +364,7 @@ add_executable                  (tesseract-core.asm.js ${tesseract_js_wrapper})
 # Disable WASM
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s WASM=0")
 
-set_target_properties(tesseract-core.asm.js PROPERTIES LINK_FLAGS ${TESS_LINK_FLAGS})
+set_target_properties(tesseract-core.asm.js PROPERTIES LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractASM\"'")
 target_link_libraries           (tesseract-core.asm.js libtesseract)
 
 ########################################
