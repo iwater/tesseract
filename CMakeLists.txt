@@ -364,7 +364,7 @@ add_executable                  (tesseract-core.asm.js ${tesseract_js_wrapper})
 # Disable WASM
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s WASM=0")
 
-set_target_properties(tesseract-core.asm.js PROPERTIES LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractASM\"'")
+set_target_properties(tesseract-core.asm.js PROPERTIES LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCoreASM\"'")
 target_link_libraries           (tesseract-core.asm.js libtesseract)
 
 ########################################
