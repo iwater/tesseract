@@ -348,8 +348,6 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s BINARYEN_TRAP_MODE='\"clamp\"'")
 #set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s RUNTIME_LOGGING=1")
 #set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s LIBRARY_DEBUG=1")
 #set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s SYSCALL_DEBUG=1")
-# Embeds all subresources in the emitted file as base64 string literals
-set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s SINGLE_FILE=1")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORTED_FUNCTIONS='[\"_pixDestroy\",\"_boxaDestroy\",\"_pixaDestroy\",\"_ptaDestroy\",\"_pixReadMem\",\"_pixReadHeaderMem\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXTRA_EXPORTED_RUNTIME_METHODS='[\"FS\", \"setValue\", \"getValue\"]'")
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/glue.js")
@@ -357,9 +355,22 @@ set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} --post-js /src/javascript/anterior.js")
 set_target_properties(tesseract-core.js PROPERTIES LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCoreWASM\"'")
 target_link_libraries           (tesseract-core.js libtesseract)
 
-########################################
+#############################################################
+# Build tesseract-core.wasm.js (WASM Base64 embedded version)
+#############################################################
+
+add_executable                  (tesseract-core.wasm.js ${tesseract_js_wrapper})
+
+# Embeds all subresources in the emitted file as base64 string literals
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s SINGLE_FILE=1")
+set_target_properties(tesseract-core.wasm.js PROPERTIES LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCoreWASM\"'")
+
+target_link_libraries           (tesseract-core.wasm.js libtesseract)
+
+
+###########################################
 # Build tesseract-core.asm.js (ASM version)
-########################################
+###########################################
 
 add_executable                  (tesseract-core.asm.js ${tesseract_js_wrapper})
 
