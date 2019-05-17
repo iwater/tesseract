@@ -5,6 +5,7 @@
 #include "ocrclass.h"
 #include "dawg.h"
 #include "unicharset.h"
+#include "renderer.h"
 
 namespace tesseract {
 	typedef unsigned char* Uint8Array;

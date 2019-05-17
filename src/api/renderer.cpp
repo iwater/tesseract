@@ -104,7 +104,12 @@ void TessResultRenderer::AppendString(const char* s) {
 }
 
 void TessResultRenderer::AppendData(const char* s, int len) {
-  if (!tesseract::Serialize(fout_, s, len)) happy_ = false;
+  bool ret = tesseract::Serialize(fout_, s, len);
+  if (ret) {
+    fflush(fout_);
+  } else {
+    happy_ = false;
+  }
 }
 
 bool TessResultRenderer::BeginDocumentHandler() {

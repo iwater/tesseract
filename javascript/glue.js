@@ -192,6 +192,57 @@ Module['BoolPtr'] = BoolPtr;
   var self = this.ptr;
   _emscripten_bind_BoolPtr___destroy___0(self);
 };
+// TessResultRenderer
+/** @suppress {undefinedVars, duplicate} */function TessResultRenderer() { throw "cannot construct a TessResultRenderer, no constructor in IDL" }
+TessResultRenderer.prototype = Object.create(WrapperObject.prototype);
+TessResultRenderer.prototype.constructor = TessResultRenderer;
+TessResultRenderer.prototype.__class__ = TessResultRenderer;
+TessResultRenderer.__cache__ = {};
+Module['TessResultRenderer'] = TessResultRenderer;
+
+TessResultRenderer.prototype['BeginDocument'] = TessResultRenderer.prototype.BeginDocument = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  else arg0 = ensureString(arg0);
+  return !!(_emscripten_bind_TessResultRenderer_BeginDocument_1(self, arg0));
+};;
+
+TessResultRenderer.prototype['AddImage'] = TessResultRenderer.prototype.AddImage = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  return !!(_emscripten_bind_TessResultRenderer_AddImage_1(self, arg0));
+};;
+
+TessResultRenderer.prototype['EndDocument'] = TessResultRenderer.prototype.EndDocument = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_TessResultRenderer_EndDocument_0(self));
+};;
+
+TessResultRenderer.prototype['happy'] = TessResultRenderer.prototype.happy = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_TessResultRenderer_happy_0(self));
+};;
+
+TessResultRenderer.prototype['file_extension'] = TessResultRenderer.prototype.file_extension = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return Pointer_stringify(_emscripten_bind_TessResultRenderer_file_extension_0(self));
+};;
+
+TessResultRenderer.prototype['title'] = TessResultRenderer.prototype.title = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return Pointer_stringify(_emscripten_bind_TessResultRenderer_title_0(self));
+};;
+
+TessResultRenderer.prototype['imagenum'] = TessResultRenderer.prototype.imagenum = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_TessResultRenderer_imagenum_0(self);
+};;
+
+  TessResultRenderer.prototype['__destroy__'] = TessResultRenderer.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_TessResultRenderer___destroy___0(self);
+};
 // LongStarPtr
 /** @suppress {undefinedVars, duplicate} */function LongStarPtr() { throw "cannot construct a LongStarPtr, no constructor in IDL" }
 LongStarPtr.prototype = Object.create(WrapperObject.prototype);
@@ -663,17 +714,36 @@ Module['WritingDirection'] = WritingDirection;
   var self = this.ptr;
   _emscripten_bind_WritingDirection___destroy___0(self);
 };
-// BoxPtr
-/** @suppress {undefinedVars, duplicate} */function BoxPtr() { throw "cannot construct a BoxPtr, no constructor in IDL" }
-BoxPtr.prototype = Object.create(WrapperObject.prototype);
-BoxPtr.prototype.constructor = BoxPtr;
-BoxPtr.prototype.__class__ = BoxPtr;
-BoxPtr.__cache__ = {};
-Module['BoxPtr'] = BoxPtr;
+// WordChoiceIterator
+/** @suppress {undefinedVars, duplicate} */function WordChoiceIterator(arg0) {
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  this.ptr = _emscripten_bind_WordChoiceIterator_WordChoiceIterator_1(arg0);
+  getCache(WordChoiceIterator)[this.ptr] = this;
+};;
+WordChoiceIterator.prototype = Object.create(WrapperObject.prototype);
+WordChoiceIterator.prototype.constructor = WordChoiceIterator;
+WordChoiceIterator.prototype.__class__ = WordChoiceIterator;
+WordChoiceIterator.__cache__ = {};
+Module['WordChoiceIterator'] = WordChoiceIterator;
 
-  BoxPtr.prototype['__destroy__'] = BoxPtr.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+WordChoiceIterator.prototype['Next'] = WordChoiceIterator.prototype.Next = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
-  _emscripten_bind_BoxPtr___destroy___0(self);
+  return !!(_emscripten_bind_WordChoiceIterator_Next_0(self));
+};;
+
+WordChoiceIterator.prototype['GetUTF8Text'] = WordChoiceIterator.prototype.GetUTF8Text = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return Pointer_stringify(_emscripten_bind_WordChoiceIterator_GetUTF8Text_0(self));
+};;
+
+WordChoiceIterator.prototype['Confidence'] = WordChoiceIterator.prototype.Confidence = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_WordChoiceIterator_Confidence_0(self);
+};;
+
+  WordChoiceIterator.prototype['__destroy__'] = WordChoiceIterator.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_WordChoiceIterator___destroy___0(self);
 };
 // Box
 /** @suppress {undefinedVars, duplicate} */function Box() { throw "cannot construct a Box, no constructor in IDL" }
@@ -712,6 +782,66 @@ Module['Box'] = Box;
   var self = this.ptr;
   _emscripten_bind_Box___destroy___0(self);
 };
+// TessPDFRenderer
+/** @suppress {undefinedVars, duplicate} */function TessPDFRenderer(arg0, arg1, arg2) {
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  else arg0 = ensureString(arg0);
+  if (arg1 && typeof arg1 === 'object') arg1 = arg1.ptr;
+  else arg1 = ensureString(arg1);
+  if (arg2 && typeof arg2 === 'object') arg2 = arg2.ptr;
+  this.ptr = _emscripten_bind_TessPDFRenderer_TessPDFRenderer_3(arg0, arg1, arg2);
+  getCache(TessPDFRenderer)[this.ptr] = this;
+};;
+TessPDFRenderer.prototype = Object.create(WrapperObject.prototype);
+TessPDFRenderer.prototype.constructor = TessPDFRenderer;
+TessPDFRenderer.prototype.__class__ = TessPDFRenderer;
+TessPDFRenderer.__cache__ = {};
+Module['TessPDFRenderer'] = TessPDFRenderer;
+
+TessPDFRenderer.prototype['BeginDocument'] = TessPDFRenderer.prototype.BeginDocument = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  else arg0 = ensureString(arg0);
+  return !!(_emscripten_bind_TessPDFRenderer_BeginDocument_1(self, arg0));
+};;
+
+TessPDFRenderer.prototype['AddImage'] = TessPDFRenderer.prototype.AddImage = /** @suppress {undefinedVars, duplicate} */function(arg0) {
+  var self = this.ptr;
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  return !!(_emscripten_bind_TessPDFRenderer_AddImage_1(self, arg0));
+};;
+
+TessPDFRenderer.prototype['EndDocument'] = TessPDFRenderer.prototype.EndDocument = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_TessPDFRenderer_EndDocument_0(self));
+};;
+
+TessPDFRenderer.prototype['happy'] = TessPDFRenderer.prototype.happy = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return !!(_emscripten_bind_TessPDFRenderer_happy_0(self));
+};;
+
+TessPDFRenderer.prototype['file_extension'] = TessPDFRenderer.prototype.file_extension = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return Pointer_stringify(_emscripten_bind_TessPDFRenderer_file_extension_0(self));
+};;
+
+TessPDFRenderer.prototype['title'] = TessPDFRenderer.prototype.title = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return Pointer_stringify(_emscripten_bind_TessPDFRenderer_title_0(self));
+};;
+
+TessPDFRenderer.prototype['imagenum'] = TessPDFRenderer.prototype.imagenum = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  return _emscripten_bind_TessPDFRenderer_imagenum_0(self);
+};;
+
+  TessPDFRenderer.prototype['__destroy__'] = TessPDFRenderer.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_TessPDFRenderer___destroy___0(self);
+};
 // PixaPtr
 /** @suppress {undefinedVars, duplicate} */function PixaPtr() { throw "cannot construct a PixaPtr, no constructor in IDL" }
 PixaPtr.prototype = Object.create(WrapperObject.prototype);
@@ -723,37 +853,6 @@ Module['PixaPtr'] = PixaPtr;
   PixaPtr.prototype['__destroy__'] = PixaPtr.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
   var self = this.ptr;
   _emscripten_bind_PixaPtr___destroy___0(self);
-};
-// WordChoiceIterator
-/** @suppress {undefinedVars, duplicate} */function WordChoiceIterator(arg0) {
-  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
-  this.ptr = _emscripten_bind_WordChoiceIterator_WordChoiceIterator_1(arg0);
-  getCache(WordChoiceIterator)[this.ptr] = this;
-};;
-WordChoiceIterator.prototype = Object.create(WrapperObject.prototype);
-WordChoiceIterator.prototype.constructor = WordChoiceIterator;
-WordChoiceIterator.prototype.__class__ = WordChoiceIterator;
-WordChoiceIterator.__cache__ = {};
-Module['WordChoiceIterator'] = WordChoiceIterator;
-
-WordChoiceIterator.prototype['Next'] = WordChoiceIterator.prototype.Next = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return !!(_emscripten_bind_WordChoiceIterator_Next_0(self));
-};;
-
-WordChoiceIterator.prototype['GetUTF8Text'] = WordChoiceIterator.prototype.GetUTF8Text = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return Pointer_stringify(_emscripten_bind_WordChoiceIterator_GetUTF8Text_0(self));
-};;
-
-WordChoiceIterator.prototype['Confidence'] = WordChoiceIterator.prototype.Confidence = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  return _emscripten_bind_WordChoiceIterator_Confidence_0(self);
-};;
-
-  WordChoiceIterator.prototype['__destroy__'] = WordChoiceIterator.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
-  var self = this.ptr;
-  _emscripten_bind_WordChoiceIterator___destroy___0(self);
 };
 // FloatPtr
 /** @suppress {undefinedVars, duplicate} */function FloatPtr() { throw "cannot construct a FloatPtr, no constructor in IDL" }
@@ -1099,6 +1198,18 @@ Module['Dawg'] = Dawg;
   var self = this.ptr;
   _emscripten_bind_Dawg___destroy___0(self);
 };
+// BoxPtr
+/** @suppress {undefinedVars, duplicate} */function BoxPtr() { throw "cannot construct a BoxPtr, no constructor in IDL" }
+BoxPtr.prototype = Object.create(WrapperObject.prototype);
+BoxPtr.prototype.constructor = BoxPtr;
+BoxPtr.prototype.__class__ = BoxPtr;
+BoxPtr.__cache__ = {};
+Module['BoxPtr'] = BoxPtr;
+
+  BoxPtr.prototype['__destroy__'] = BoxPtr.prototype.__destroy__ = /** @suppress {undefinedVars, duplicate} */function() {
+  var self = this.ptr;
+  _emscripten_bind_BoxPtr___destroy___0(self);
+};
 // TessBaseAPI
 /** @suppress {undefinedVars, duplicate} */function TessBaseAPI() {
   this.ptr = _emscripten_bind_TessBaseAPI_TessBaseAPI_0();
@@ -1407,6 +1518,32 @@ TessBaseAPI.prototype['RecognizeForChopTest'] = TessBaseAPI.prototype.RecognizeF
   var self = this.ptr;
   if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
   return _emscripten_bind_TessBaseAPI_RecognizeForChopTest_1(self, arg0);
+};;
+
+TessBaseAPI.prototype['ProcessPages'] = TessBaseAPI.prototype.ProcessPages = /** @suppress {undefinedVars, duplicate} */function(arg0, arg1, arg2, arg3) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  else arg0 = ensureString(arg0);
+  if (arg1 && typeof arg1 === 'object') arg1 = arg1.ptr;
+  else arg1 = ensureString(arg1);
+  if (arg2 && typeof arg2 === 'object') arg2 = arg2.ptr;
+  if (arg3 && typeof arg3 === 'object') arg3 = arg3.ptr;
+  return !!(_emscripten_bind_TessBaseAPI_ProcessPages_4(self, arg0, arg1, arg2, arg3));
+};;
+
+TessBaseAPI.prototype['ProcessPage'] = TessBaseAPI.prototype.ProcessPage = /** @suppress {undefinedVars, duplicate} */function(arg0, arg1, arg2, arg3, arg4, arg5) {
+  var self = this.ptr;
+  ensureCache.prepare();
+  if (arg0 && typeof arg0 === 'object') arg0 = arg0.ptr;
+  if (arg1 && typeof arg1 === 'object') arg1 = arg1.ptr;
+  if (arg2 && typeof arg2 === 'object') arg2 = arg2.ptr;
+  else arg2 = ensureString(arg2);
+  if (arg3 && typeof arg3 === 'object') arg3 = arg3.ptr;
+  else arg3 = ensureString(arg3);
+  if (arg4 && typeof arg4 === 'object') arg4 = arg4.ptr;
+  if (arg5 && typeof arg5 === 'object') arg5 = arg5.ptr;
+  return !!(_emscripten_bind_TessBaseAPI_ProcessPage_6(self, arg0, arg1, arg2, arg3, arg4, arg5));
 };;
 
 TessBaseAPI.prototype['GetIterator'] = TessBaseAPI.prototype.GetIterator = /** @suppress {undefinedVars, duplicate} */function() {

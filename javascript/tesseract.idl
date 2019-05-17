@@ -408,12 +408,12 @@ interface TessBaseAPI {
    * Returns true if successful, false on error.
    */
   
-  // boolean ProcessPages([Const] DOMString filename, [Const] DOMString retry_config,
-  //                   long timeout_millisec, TessResultRenderer renderer);
+  boolean ProcessPages([Const] DOMString filename, [Const] DOMString retry_config,
+                     long timeout_millisec, TessResultRenderer renderer);
 
   // Does the real work of ProcessPages.
   // boolean ProcessPagesInternal([Const] DOMString filename, [Const] DOMString retry_config,
-  //                           long timeout_millisec, TessResultRenderer* renderer);
+  //                           long timeout_millisec, TessResultRendererPtr renderer);
 
   /**
    * Turn a single image into symbolic text.
@@ -425,9 +425,9 @@ interface TessBaseAPI {
    * See ProcessPages for desciptions of other parameters.
    */
 
-  // boolean ProcessPage(Pix pix, long page_index, [Const] DOMString filename,
-  //                  [Const] DOMString retry_config, long timeout_millisec,
-  //                  TessResultRenderer renderer);
+  boolean ProcessPage(Pix pix, long page_index, [Const] DOMString filename,
+                    [Const] DOMString retry_config, long timeout_millisec,
+                    TessResultRenderer renderer);
 
   /**
    * Get a reading-order iterator to the results of LayoutAnalysis and/or
@@ -1276,7 +1276,26 @@ interface Pta {
   readonly attribute FloatPtr y; 
 };
 
-// interface TessResultRenderer {};
+interface TessResultRenderer {
+  boolean BeginDocument([Const] DOMString title);
+  boolean AddImage(TessBaseAPI api);
+  boolean EndDocument();
+  boolean happy();
+  [Const] DOMString file_extension();
+  [Const] DOMString title();
+  long imagenum();
+};
+
+interface TessPDFRenderer {
+  void TessPDFRenderer([Const] DOMString outputbase, [Const] DOMString datadir, boolean textonly );
+  boolean BeginDocument([Const] DOMString title);
+  boolean AddImage(TessBaseAPI api);
+  boolean EndDocument();
+  boolean happy();
+  [Const] DOMString file_extension();
+  [Const] DOMString title();
+  long imagenum();
+};
 
 interface Dawg {};
 

@@ -24,6 +24,40 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_BoolPtr___destroy___0(BoolPtr* self) {
   delete self;
 }
 
+// TessResultRenderer
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_BeginDocument_1(TessResultRenderer* self, const char* arg0) {
+  return self->BeginDocument(arg0);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_AddImage_1(TessResultRenderer* self, TessBaseAPI* arg0) {
+  return self->AddImage(arg0);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_EndDocument_0(TessResultRenderer* self) {
+  return self->EndDocument();
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_happy_0(TessResultRenderer* self) {
+  return self->happy();
+}
+
+const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_file_extension_0(TessResultRenderer* self) {
+  return self->file_extension();
+}
+
+const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_title_0(TessResultRenderer* self) {
+  return self->title();
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer_imagenum_0(TessResultRenderer* self) {
+  return self->imagenum();
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessResultRenderer___destroy___0(TessResultRenderer* self) {
+  delete self;
+}
+
 // LongStarPtr
 
 void EMSCRIPTEN_KEEPALIVE emscripten_bind_LongStarPtr___destroy___0(LongStarPtr* self) {
@@ -306,9 +340,25 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_WritingDirection___destroy___0(Writing
   delete self;
 }
 
-// BoxPtr
+// WordChoiceIterator
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_BoxPtr___destroy___0(BoxPtr* self) {
+WordChoiceIterator* EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_WordChoiceIterator_1(const ResultIterator* arg0) {
+  return new WordChoiceIterator(*arg0);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_Next_0(WordChoiceIterator* self) {
+  return self->Next();
+}
+
+const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_GetUTF8Text_0(WordChoiceIterator* self) {
+  return self->GetUTF8Text();
+}
+
+float EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_Confidence_0(WordChoiceIterator* self) {
+  return self->Confidence();
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator___destroy___0(WordChoiceIterator* self) {
   delete self;
 }
 
@@ -338,31 +388,47 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_Box___destroy___0(Box* self) {
   delete self;
 }
 
-// PixaPtr
+// TessPDFRenderer
 
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_PixaPtr___destroy___0(PixaPtr* self) {
+TessPDFRenderer* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_TessPDFRenderer_3(const char* arg0, const char* arg1, bool arg2) {
+  return new TessPDFRenderer(arg0, arg1, arg2);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_BeginDocument_1(TessPDFRenderer* self, const char* arg0) {
+  return self->BeginDocument(arg0);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_AddImage_1(TessPDFRenderer* self, TessBaseAPI* arg0) {
+  return self->AddImage(arg0);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_EndDocument_0(TessPDFRenderer* self) {
+  return self->EndDocument();
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_happy_0(TessPDFRenderer* self) {
+  return self->happy();
+}
+
+const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_file_extension_0(TessPDFRenderer* self) {
+  return self->file_extension();
+}
+
+const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_title_0(TessPDFRenderer* self) {
+  return self->title();
+}
+
+int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer_imagenum_0(TessPDFRenderer* self) {
+  return self->imagenum();
+}
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_TessPDFRenderer___destroy___0(TessPDFRenderer* self) {
   delete self;
 }
 
-// WordChoiceIterator
+// PixaPtr
 
-WordChoiceIterator* EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_WordChoiceIterator_1(const ResultIterator* arg0) {
-  return new WordChoiceIterator(*arg0);
-}
-
-bool EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_Next_0(WordChoiceIterator* self) {
-  return self->Next();
-}
-
-const char* EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_GetUTF8Text_0(WordChoiceIterator* self) {
-  return self->GetUTF8Text();
-}
-
-float EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator_Confidence_0(WordChoiceIterator* self) {
-  return self->Confidence();
-}
-
-void EMSCRIPTEN_KEEPALIVE emscripten_bind_WordChoiceIterator___destroy___0(WordChoiceIterator* self) {
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_PixaPtr___destroy___0(PixaPtr* self) {
   delete self;
 }
 
@@ -592,6 +658,12 @@ void EMSCRIPTEN_KEEPALIVE emscripten_bind_Dawg___destroy___0(Dawg* self) {
   delete self;
 }
 
+// BoxPtr
+
+void EMSCRIPTEN_KEEPALIVE emscripten_bind_BoxPtr___destroy___0(BoxPtr* self) {
+  delete self;
+}
+
 // TessBaseAPI
 
 TessBaseAPI* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_TessBaseAPI_0() {
@@ -776,6 +848,14 @@ int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_Recognize_1(TessBaseAPI* se
 
 int EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_RecognizeForChopTest_1(TessBaseAPI* self, ETEXT_DESC* arg0) {
   return self->RecognizeForChopTest(arg0);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_ProcessPages_4(TessBaseAPI* self, const char* arg0, const char* arg1, int arg2, TessResultRenderer* arg3) {
+  return self->ProcessPages(arg0, arg1, arg2, arg3);
+}
+
+bool EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_ProcessPage_6(TessBaseAPI* self, Pix* arg0, int arg1, const char* arg2, const char* arg3, int arg4, TessResultRenderer* arg5) {
+  return self->ProcessPage(arg0, arg1, arg2, arg3, arg4, arg5);
 }
 
 ResultIterator* EMSCRIPTEN_KEEPALIVE emscripten_bind_TessBaseAPI_GetIterator_0(TessBaseAPI* self) {
