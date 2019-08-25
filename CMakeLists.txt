@@ -328,6 +328,8 @@ add_executable                  (tesseract-core.js ${tesseract_js_wrapper})
 #
 # Use double amount of memory comparing to default
 set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s TOTAL_MEMORY=268435456")
+# Allow memory to grow
+set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s ALLOW_MEMORY_GROWTH=1")
 # Replace default name 'Module' with 'TesseractCore'
 # set(TESS_LINK_FLAGS "${TESS_LINK_FLAGS} -s EXPORT_NAME='\"TesseractCore\"'")
 # Enable for closure option
