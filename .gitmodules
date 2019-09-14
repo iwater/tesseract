@@ -9,5 +9,5 @@
 	url = https://github.com/tesseract-ocr/test
 [submodule "leptonica"]
 	path = leptonica
-  url = git@github.com:jeromewu/leptonica.git
-  branch = 1.74.2-tesseract.js
+	url = https://github.com/jeromewu/leptonica.git
+	branch = 1.74.2-tesseract.js
